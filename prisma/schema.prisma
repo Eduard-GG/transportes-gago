@@ -1,0 +1,178 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model user {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  username  String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model choferes {
+  id_chofer       Int      @id @default(autoincrement())
+  nombre          String
+  fechaNacimiento DateTime
+  direccion       String
+  telefono        String
+  fechaIngreso    DateTime
+  foto            String
+  curp            String
+  contrato        String
+  //--------------------------
+  //examenes_medicos examenes_medicos? @relation(fields: [Id_examen_medico], references: [id_examen_medico])
+  //Id_examen_medico Int
+
+  //licencias_deo   licencias_deo? @relation(fields: [Id_licencia_deo], references: [id_licencia_deo])
+  //Id_licencia_deo Int
+
+  //licencias_federales licencias_federales? @relation(fields: [Id_licencia_federal], references: [id_licencia_federal])
+  //Id_licencia_federal Int
+}
+
+model clientes {
+  id_cliente       Int    @id @default(autoincrement())
+  nombre_empresa   String
+  direccion        String
+  telefono         String
+  correo           String
+  persona_contacto String
+}
+
+model examenes_medicos {
+  id_examen_medico Int      @id @default(autoincrement())
+  no_expediente    String
+  fecha_examen     DateTime
+  vigencia         DateTime
+  documento        String
+  costo_renovacion String
+  //choferes         choferes[]
+}
+
+model licencias_dea {
+  id_licencia_dea  Int      @id @default(autoincrement())
+  no_dea           String
+  vigencia         DateTime
+  estatus          String
+  documento_dea    String
+  costo_renovacion String
+}
+
+model licencias_deo {
+  id_licencia_deo  Int      @id @default(autoincrement())
+  no_deo           String
+  vigencia         DateTime
+  estatus          String
+  documento        String
+  costo_renovacion String
+  //choferes         choferes[]
+}
+
+model licencias_federales {
+  id_licencia_federal Int      @id @default(autoincrement())
+  no_licencia_federal String
+  vigencia            DateTime
+  tipo                String
+  fecha_renovacion    DateTime
+  documento           String
+  costo_renovacion    String
+  //choferes            choferes[]
+}
+
+model productos {
+  id_producto             Int    @id @default(autoincrement())
+  no_onu                  String @unique
+  nombre_sustancia        String
+  clase_peligro           String
+  grupo_embalaje          String
+  precauciones_especiales String
+  densidad                String
+}
+
+model seguros {
+  id_seguro          Int      @id @default(autoincrement())
+  poliza             String
+  fecha_contratacion DateTime
+  fecha_vencimiento  DateTime
+  estatus            String
+  documento_poliza   String
+  documento_pago     String
+  costo_renovacion   String
+}
+
+model unidades {
+  id_unidad       Int    @id @default(autoincrement())
+  ano             String
+  modelo          String
+  placa           String
+  no_serie        String
+  no_ejes         String
+  capacidad       String
+  material_tanque String
+  disponibilidad  String
+  poliza_seguro   String
+  //--------------------------
+  id_seguro       Int
+  id_licencia_dea Int
+}
+
+model usuarios {
+  id_usuario  Int    @id @default(autoincrement())
+  usuario     String
+  contrasenia String
+}
+
+model viajes {
+  id_viaje           Int      @id @default(autoincrement())
+  dia_carga          DateTime
+  dia_descarga       DateTime
+  no_remision        String
+  direccion_carga    String
+  direccion_descarga String
+  cantidad           String
+  peso               String
+  estatus_vieje      String
+  costo              String
+  observaciones      String
+  material           String
+  //--------------------------
+  id_cliente         Int
+  id_producto        Int
+  id_unidad          Int
+  id_chofer          Int
+}
+
+model rendimiento {
+  id_historial        Int      @id @default(autoincrement())
+  fecha_hora_salida   DateTime
+  fecha_hora_llegada  DateTime
+  distancia_recorrida String
+  diesel_llegada      String
+  diesel_salida       String
+  precio_cobrado      String
+  promedio            String
+  gasto               String
+  observaciones       String
+  //--------------------------
+  id_viaje            String
+}
+
+model archivos {
+  id      Int    @id @default(autoincrement())
+  name    String
+  price   Float
+  fileUrl String
+}
